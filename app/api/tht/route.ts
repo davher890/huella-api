@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabaseClient"
 
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const device_id = searchParams.get("device_id")
+
+  if (!device_id) {
+    return NextResponse.json({ error: "device_id is required" }, { status: 400 })
+  }
+}
+
 export async function POST(req: Request) {
   const body = await req.json()
   const { device_id, latitude, longitude, recorded_at, speed, altitude, accuracy } = body
