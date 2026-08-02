@@ -1,32 +1,8 @@
 import { NextResponse } from "next/server"
-import { requireUser } from "@/lib/auth"
+import { requireDeviceOwner } from "@/lib/auth"
 import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 
 type Point = { lat: number; lng: number }
-
-type OwnedDeviceResult =
-  | { device: { id: number } }
-  | { error: string; status: number }
-
-async function getOwnedDevice(req: Request, deviceId: string): Promise<OwnedDeviceResult> {
-  const auth = await requireUser(req)
-  if ("error" in auth) {
-    return auth
-  }
-
-  const { data: device, error: deviceError } = await supabaseAdmin
-    .from("devices")
-    .select("id, user_devices!inner ( id )")
-    .eq("device_id", deviceId)
-    .eq("user_devices.user_id", auth.user.id)
-    .single()
-
-  if (deviceError || !device) {
-    return { error: "Device not found or not owned by this user", status: 404 }
-  }
-
-  return { device }
-}
 
 // PostGIS devuelve las columnas `geometry` casteadas a texto como EWKB en hex
 // (no como WKT), asi que hay que decodificar el binario a mano.
@@ -85,7 +61,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     return NextResponse.json({ error: "Device ID required" }, { status: 400 })
   }
 
-  const owned = await getOwnedDevice(req, deviceId)
+  const owned = await requireDeviceOwner(req, deviceId)
   if ("error" in owned) {
     return NextResponse.json({ error: owned.error }, { status: owned.status })
   }
@@ -138,7 +114,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ deviceI
     }
   }
 
-  const owned = await getOwnedDevice(req, deviceId)
+  const owned = await requireDeviceOwner(req, deviceId)
   if ("error" in owned) {
     return NextResponse.json({ error: owned.error }, { status: owned.status })
   }
