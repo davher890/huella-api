@@ -5,6 +5,28 @@ import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 
 type ClusterUpdate = { id: number; cluster: number | null }
 
+// Supabase (PostgREST) capa cada respuesta a "Max Rows" (1000 por defecto)
+// pase lo que pase en el .range()/.limit() de la query. Para traer mas de
+// eso hay que pedirlo en paginas sucesivas, todas por debajo de ese tope.
+const PAGE_SIZE = 1000
+const MAX_PAGES = 50 // salvaguarda: hasta 50.000 filas por respuesta
+
+function buildBaseQuery(deviceId: string, from: string | null, to: string | null) {
+  let query = supabase.from("device_locations").select('*')
+    .eq('device_id', deviceId)
+
+  if (from) {
+    query = query.gte('recorded_at', from)
+  }
+  if (to) {
+    query = query.lte('recorded_at', to)
+  }
+
+  // Segundo criterio de orden (id) para que la paginacion sea determinista
+  // aunque haya varias filas con el mismo recorded_at.
+  return query.order('recorded_at', { ascending: false }).order('id', { ascending: false })
+}
+
 export async function GET(req: Request, { params }: { params: Promise<{ deviceId: string }> }) {
 
   const { deviceId } = await params
@@ -31,27 +53,33 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     }
   }
 
-  let query = supabase.from("device_locations").select('*')
-    .eq('device_id', deviceId)
-
-  if (from) {
-    query = query.gte('recorded_at', from)
-  }
-  if (to) {
-    query = query.lte('recorded_at', to)
-  }
-
-  let orderedQuery = query.order('recorded_at', { ascending: false })
+  // Con limit explicito (ej. "ultima posicion") basta una sola llamada.
   if (limit) {
-    orderedQuery = orderedQuery.limit(limit)
+    const { data, error } = await buildBaseQuery(deviceId, from, to).limit(limit)
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    return NextResponse.json({ locations: data ?? [] })
   }
 
-  const { data: locations, error } = await orderedQuery
+  // Sin limit: traemos todo, paginando por debajo del tope de Supabase.
+  const locations: Record<string, unknown>[] = []
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const rangeStart = page * PAGE_SIZE
+    const rangeEnd = rangeStart + PAGE_SIZE - 1
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    const { data, error } = await buildBaseQuery(deviceId, from, to).range(rangeStart, rangeEnd)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    locations.push(...(data ?? []))
+
+    if (!data || data.length < PAGE_SIZE) break
   }
-  return NextResponse.json({ locations: locations ?? [] })
+
+  return NextResponse.json({ locations })
 }
 
 // Actualiza el cluster de varias locations de un device en una sola llamada
