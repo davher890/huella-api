@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { getDeviceConfig } from "@/lib/deviceConfigCache"
 import { supabase } from "@/lib/supabaseClient"
 
 type LocationInput = {
@@ -46,5 +47,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ success: true, count: rows.length }, { status: 201 })
+  // In practice the whole batch belongs to the same device (the offline
+  // queue is per device); we return the last record's config as current.
+  const lastDeviceId = rows[rows.length - 1].device_id
+  const config = await getDeviceConfig(lastDeviceId)
+
+  return NextResponse.json(
+    { success: true, count: rows.length, sleep_interval: config?.sleepInterval ?? null },
+    { status: 201 }
+  )
 }

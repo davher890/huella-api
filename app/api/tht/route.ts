@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { getDeviceConfig } from "@/lib/deviceConfigCache"
 import { supabase } from "@/lib/supabaseClient"
 
 export async function GET(req: Request) {
@@ -35,5 +36,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ success: true }, { status: 201 })
+  const config = await getDeviceConfig(device_id)
+
+  return NextResponse.json(
+    { success: true, sleep_interval: config?.sleepInterval ?? null },
+    { status: 201 }
+  )
 }

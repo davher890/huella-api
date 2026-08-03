@@ -7,10 +7,10 @@ export type AuthResult =
   | { user: User; token: string }
   | { error: string; status: number }
 
-// Punto unico donde se valida el Authorization: Bearer <token> de una
-// peticion. Cualquier ruta que necesite saber "quien hace esta llamada"
-// deberia usar esta funcion en vez de repetir la extraccion/verificacion
-// del token.
+// Single place where a request's Authorization: Bearer <token> is
+// validated. Any route that needs to know "who is making this call"
+// should use this function instead of repeating the token
+// extraction/verification.
 export async function requireUser(req: Request): Promise<AuthResult> {
   const authHeader = req.headers.get("authorization")
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null
@@ -27,7 +27,7 @@ export async function requireUser(req: Request): Promise<AuthResult> {
   return { user: data.user, token }
 }
 
-// Igual que requireUser, pero ademas exige que el usuario tenga role admin.
+// Same as requireUser, but also requires the user to have the admin role.
 export async function requireAdmin(req: Request): Promise<AuthResult> {
   const result = await requireUser(req)
   if ("error" in result) {
@@ -45,8 +45,8 @@ export type DeviceOwnerResult =
   | { user: User; device: { id: number } }
   | { error: string; status: number }
 
-// Igual que requireUser, pero ademas comprueba que el device (identificado
-// por su device_id de texto) pertenece al usuario autenticado.
+// Same as requireUser, but also checks that the device (identified by its
+// text device_id) belongs to the authenticated user.
 export async function requireDeviceOwner(req: Request, deviceId: string): Promise<DeviceOwnerResult> {
   const auth = await requireUser(req)
   if ("error" in auth) {
@@ -67,9 +67,9 @@ export async function requireDeviceOwner(req: Request, deviceId: string): Promis
   return { user: auth.user, device }
 }
 
-// Cliente de Supabase que ejecuta las queries como el usuario autenticado
-// (no como el cliente anon compartido), para que las policies de RLS que
-// dependen de auth.uid() vean al usuario real.
+// Supabase client that runs queries as the authenticated user (not as the
+// shared anon client), so RLS policies relying on auth.uid() see the real
+// caller.
 export function getSupabaseForUser(token: string) {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

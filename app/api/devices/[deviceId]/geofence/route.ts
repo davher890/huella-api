@@ -4,8 +4,8 @@ import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 
 type Point = { lat: number; lng: number }
 
-// PostGIS devuelve las columnas `geometry` casteadas a texto como EWKB en hex
-// (no como WKT), asi que hay que decodificar el binario a mano.
+// PostGIS returns `geometry` columns cast to text as hex-encoded EWKB
+// (not WKT), so we have to decode the binary by hand.
 function parseEwkbPolygonPoints(hex: string): Point[] {
   const buf = Buffer.from(hex, "hex")
   let offset = 0
@@ -28,7 +28,7 @@ function parseEwkbPolygonPoints(hex: string): Point[] {
   const hasSrid = (typeAndFlags & 0x20000000) !== 0
   const geomType = typeAndFlags & 0xff
   if (hasSrid) {
-    readUInt32() // SRID, no lo necesitamos aqui
+    readUInt32() // SRID, we don't need it here
   }
 
   if (geomType !== 3 /* wkbPolygon */) {
@@ -38,7 +38,7 @@ function parseEwkbPolygonPoints(hex: string): Point[] {
   const numRings = readUInt32()
   if (numRings === 0) return []
 
-  // Solo usamos el anillo exterior; no soportamos holes.
+  // We only use the outer ring; holes aren't supported.
   const numPoints = readUInt32()
   const points: Point[] = []
   for (let i = 0; i < numPoints; i++) {
@@ -125,7 +125,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ deviceI
   }
   const wkt = `SRID=4326;POLYGON((${ring.join(", ")}))`
 
-  // Una zona activa por device: sustituye cualquier geofence anterior.
+  // One active zone per device: replace any previous geofence.
   await supabaseAdmin.from("device_geofences").delete().eq("device_id", owned.device.id)
 
   const { data: geofence, error } = await supabaseAdmin

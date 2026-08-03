@@ -5,11 +5,11 @@ import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 
 type ClusterUpdate = { id: number; cluster: number | null }
 
-// Supabase (PostgREST) capa cada respuesta a "Max Rows" (1000 por defecto)
-// pase lo que pase en el .range()/.limit() de la query. Para traer mas de
-// eso hay que pedirlo en paginas sucesivas, todas por debajo de ese tope.
+// Supabase (PostgREST) caps every response at "Max Rows" (1000 by default)
+// no matter what the query's .range()/.limit() asks for. To fetch more than
+// that we have to request it in successive pages, each below that cap.
 const PAGE_SIZE = 1000
-const MAX_PAGES = 50 // salvaguarda: hasta 50.000 filas por respuesta
+const MAX_PAGES = 50 // safety net: up to 50,000 rows per response
 
 function buildBaseQuery(deviceId: string, from: string | null, to: string | null) {
   let query = supabase.from("device_locations").select('*')
@@ -22,8 +22,8 @@ function buildBaseQuery(deviceId: string, from: string | null, to: string | null
     query = query.lte('recorded_at', to)
   }
 
-  // Segundo criterio de orden (id) para que la paginacion sea determinista
-  // aunque haya varias filas con el mismo recorded_at.
+  // Secondary sort key (id) so pagination is deterministic even when
+  // several rows share the same recorded_at.
   return query.order('recorded_at', { ascending: false }).order('id', { ascending: false })
 }
 
@@ -53,7 +53,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     }
   }
 
-  // Con limit explicito (ej. "ultima posicion") basta una sola llamada.
+  // With an explicit limit (e.g. "latest position") a single call is enough.
   if (limit) {
     const { data, error } = await buildBaseQuery(deviceId, from, to).limit(limit)
     if (error) {
@@ -62,7 +62,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     return NextResponse.json({ locations: data ?? [] })
   }
 
-  // Sin limit: traemos todo, paginando por debajo del tope de Supabase.
+  // Without a limit: fetch everything, paginating under Supabase's cap.
   const locations: Record<string, unknown>[] = []
   for (let page = 0; page < MAX_PAGES; page++) {
     const rangeStart = page * PAGE_SIZE
@@ -82,9 +82,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
   return NextResponse.json({ locations })
 }
 
-// Actualiza el cluster de varias locations de un device en una sola llamada
-// (pensado para el notebook de analisis de datos que calcula clusters con
-// DBSCAN y luego necesita guardarlos).
+// Updates the cluster of several of a device's locations in a single call
+// (built for the data analysis notebook that computes clusters with DBSCAN
+// and then needs to save them).
 export async function PATCH(req: Request, { params }: { params: Promise<{ deviceId: string }> }) {
   const { deviceId } = await params
   if (!deviceId) {
@@ -112,9 +112,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ device
     }
   }
 
-  // Una sola sentencia SQL para todas las filas (via RPC), en vez de una
-  // peticion HTTP por update: con cientos/miles de locations, disparar un
-  // Promise.all de updates individuales satura las conexiones salientes.
+  // A single SQL statement for all rows (via RPC), instead of one HTTP
+  // request per update: with hundreds/thousands of locations, firing a
+  // Promise.all of individual updates saturates the outgoing connections.
   const { data, error } = await supabaseAdmin.rpc("update_device_location_clusters", {
     p_device_id: deviceId,
     p_updates: updates,
