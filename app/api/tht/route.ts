@@ -13,6 +13,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const body = await req.json()
+  console.log("Received POST request with body:", body)
   const { device_id, latitude, longitude, recorded_at, speed, altitude, accuracy, battery_mv, battery_pct, source } = body
 
   if (!device_id || typeof latitude !== "number" || typeof longitude !== "number") {
