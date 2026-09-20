@@ -6,18 +6,17 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
 
   console.log("Received GET request with params:", searchParams.toString())
-  console.log("Received GET request with params:", Object.fromEntries(searchParams))
-  const device_id = searchParams.get("device_id")
+  // const { device_id, latitude, longitude, recorded_at, speed, altitude, accuracy, battery_mv, battery_pct, source } = body
+  const device_id = searchParams.get("id")  // <- Traccar manda "id", no "device_id"
+  const latitude = searchParams.get("lat")
+  const longitude = searchParams.get("lon")
+  const recorded_at = searchParams.get("timestamp")
+  const speed = searchParams.get("speed")
+  const altitude = searchParams.get("altitude")
 
   if (!device_id) {
     return NextResponse.json({ error: "device_id is required" }, { status: 400 })
   }
-}
-
-export async function POST(req: Request) {
-  const body = await req.json()
-  console.log("Received POST request with body:", body)
-  const { device_id, latitude, longitude, recorded_at, speed, altitude, accuracy, battery_mv, battery_pct, source } = body
 
   if (!device_id || typeof latitude !== "number" || typeof longitude !== "number") {
     return NextResponse.json(
@@ -33,10 +32,10 @@ export async function POST(req: Request) {
     altitude,
     recorded_at: recorded_at ?? new Date().toISOString(),
     speed,
-    accuracy,
-    battery_mv,
-    battery_pct,
-    source
+    accuracy: 0,
+    battery_mv: 0,
+    battery_pct: 0,
+    source: 0
   })
 
   if (error) {
