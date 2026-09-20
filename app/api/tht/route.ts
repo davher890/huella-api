@@ -18,6 +18,14 @@ export async function GET(req: Request) {
   // const battery_pct = searchParams.get("battery_pct")
   // const source = searchParams.get("source")
 
+  console.log("Parsed parameters:", {
+    device_id,
+    latitude,
+    longitude,
+    recorded_at,
+    speed,
+    altitude
+  })
   if (!device_id) {
     return NextResponse.json({ error: "device_id is required" }, { status: 400 })
   }
