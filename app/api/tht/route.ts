@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabaseClient"
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
+
+  console.log("Received GET request with params:", searchParams)
   const device_id = searchParams.get("device_id")
 
   if (!device_id) {
