@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const device_id = searchParams.get("device_id")
   const latitude = parseFloat(searchParams.get("lat") ?? "")
   const longitude = parseFloat(searchParams.get("lon") ?? "")
-  const recorded_at = searchParams.get("time")
+  const recorded_at = parseFloat(searchParams.get("time") ?? "") ? new Date(parseFloat(searchParams.get("time")!) * 1000).toISOString() : null
   const speed = searchParams.get("speed") ? parseFloat(searchParams.get("speed")!) : null
   const altitude = searchParams.get("altitude") ? parseFloat(searchParams.get("altitude")!) : null
 
@@ -44,6 +44,7 @@ export async function GET(req: Request) {
   })
 
   if (error) {
+    console.error("Error inserting device location:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
