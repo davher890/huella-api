@@ -13,6 +13,7 @@ export async function GET(req: Request) {
   const recorded_at = parseFloat(searchParams.get("time") ?? "") ? new Date(parseFloat(searchParams.get("time")!)).toISOString() : null
   const speed = searchParams.get("speed") ? parseFloat(searchParams.get("speed")!) : null
   const altitude = searchParams.get("altitude") ? parseFloat(searchParams.get("altitude")!) : null
+  const accuracy = searchParams.get("accuracy") ? parseFloat(searchParams.get("accuracy")!) : null
 
   console.log("Parsed parameters:", {
     device_id,
@@ -20,7 +21,8 @@ export async function GET(req: Request) {
     longitude,
     recorded_at,
     speed,
-    altitude
+    altitude,
+    accuracy
   })
 
   if (!device_id || Number.isNaN(latitude) || Number.isNaN(longitude)) {
@@ -37,7 +39,7 @@ export async function GET(req: Request) {
     altitude,
     recorded_at: recorded_at ?? new Date().toISOString(),
     speed,
-    accuracy: 0,
+    accuracy,
     battery_mv: 0,
     battery_pct: 0,
     source: 0
