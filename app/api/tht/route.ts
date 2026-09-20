@@ -6,17 +6,13 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
 
   console.log("Received GET request with params:", searchParams.toString())
-  // const { device_id, latitude, longitude, recorded_at, speed, altitude, accuracy, battery_mv, battery_pct, source } = body
-  const device_id = searchParams.get("device_id")  // <- Traccar manda "id", no "device_id"
-  const latitude = searchParams.get("lat")
-  const longitude = searchParams.get("lon")
-  const recorded_at = searchParams.get("timestamp")
-  const speed = searchParams.get("speed")
-  const altitude = searchParams.get("altitude")
-  // const accuracy = searchParams.get("accuracy")
-  // const battery_mv = searchParams.get("battery_mv")
-  // const battery_pct = searchParams.get("battery_pct")
-  // const source = searchParams.get("source")
+
+  const device_id = searchParams.get("device_id")
+  const latitude = parseFloat(searchParams.get("lat") ?? "")
+  const longitude = parseFloat(searchParams.get("lon") ?? "")
+  const recorded_at = searchParams.get("time")
+  const speed = searchParams.get("speed") ? parseFloat(searchParams.get("speed")!) : null
+  const altitude = searchParams.get("altitude") ? parseFloat(searchParams.get("altitude")!) : null
 
   console.log("Parsed parameters:", {
     device_id,
@@ -26,11 +22,8 @@ export async function GET(req: Request) {
     speed,
     altitude
   })
-  if (!device_id) {
-    return NextResponse.json({ error: "device_id is required" }, { status: 400 })
-  }
 
-  if (!device_id || typeof latitude !== "number" || typeof longitude !== "number") {
+  if (!device_id || Number.isNaN(latitude) || Number.isNaN(longitude)) {
     return NextResponse.json(
       { error: "device_id, latitude and longitude are required" },
       { status: 400 }
