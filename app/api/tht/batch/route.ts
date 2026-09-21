@@ -1,19 +1,9 @@
 import { NextResponse } from "next/server"
-import { getDeviceConfig } from "@/lib/deviceConfigCache"
-import { supabase } from "@/lib/supabaseClient"
-
-type LocationInput = {
-  device_id: string
-  latitude: number
-  longitude: number
-  recorded_at?: string
-  speed?: number
-  altitude?: number
-  accuracy?: number
-}
+import type { BatchLocationInput } from "@/lib/models/location"
+import { recordLocationsBatch } from "@/lib/services/locationService"
 
 export async function POST(req: Request) {
-  const { locations } = (await req.json()) as { locations?: LocationInput[] }
+  const { locations } = (await req.json()) as { locations?: BatchLocationInput[] }
 
   if (!Array.isArray(locations) || locations.length === 0) {
     return NextResponse.json(
@@ -31,29 +21,13 @@ export async function POST(req: Request) {
     }
   }
 
-  const rows = locations.map((loc) => ({
-    device_id: loc.device_id,
-    latitude: loc.latitude,
-    longitude: loc.longitude,
-    recorded_at: loc.recorded_at ?? new Date().toISOString(),
-    speed: loc.speed,
-    altitude: loc.altitude,
-    accuracy: loc.accuracy,
-  }))
-
-  const { error } = await supabase.from("device_locations").insert(rows)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const result = await recordLocationsBatch(locations)
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  // In practice the whole batch belongs to the same device (the offline
-  // queue is per device); we return the last record's config as current.
-  const lastDeviceId = rows[rows.length - 1].device_id
-  const config = await getDeviceConfig(lastDeviceId)
-
   return NextResponse.json(
-    { success: true, count: rows.length, sleep_interval: config?.sleepInterval ?? null },
+    { success: true, count: result.data.count, sleep_interval: result.data.sleepInterval },
     { status: 201 }
   )
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
-import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { createDevice, listAllDevices } from "@/lib/services/deviceService"
 
 export async function GET(req: Request) {
   const auth = await requireAdmin(req)
@@ -8,16 +8,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: auth.error }, { status: auth.status })
   }
 
-  const { data: devices, error } = await supabaseAdmin
-    .from("devices")
-    .select("id, device_id, name")
-    .order("name", { ascending: true })
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const result = await listAllDevices()
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  return NextResponse.json({ devices: devices ?? [] })
+  return NextResponse.json({ devices: result.data })
 }
 
 export async function POST(req: Request) {
@@ -34,21 +30,10 @@ export async function POST(req: Request) {
     )
   }
 
-  const { data: device, error } = await supabaseAdmin
-    .from("devices")
-    .insert({ device_id, name })
-    .select("id, device_id, name")
-    .single()
-
-  if (error) {
-    if (error.code === "23505") {
-      return NextResponse.json(
-        { error: "A device with this device_id already exists" },
-        { status: 409 }
-      )
-    }
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const result = await createDevice({ deviceId: device_id, name })
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  return NextResponse.json({ device }, { status: 201 })
+  return NextResponse.json({ device: result.data }, { status: 201 })
 }

@@ -1,8 +1,7 @@
+import type { DeviceConfig } from "./models/deviceConfig"
 import { supabaseAdmin } from "./supabaseAdminClient"
 
-export type DeviceConfig = {
-  sleepInterval: number
-}
+export type { DeviceConfig }
 
 // In-memory cache of each device's configuration, indexed by the text
 // device_id (the same one used by /api/tht and /api/devices/*).
