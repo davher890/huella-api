@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabaseClient"
+import { requestPasswordReset } from "@/lib/services/authService"
 
 // Public on purpose: this is the "forgot my password, can't log in" flow,
 // so it can't require a Bearer token. Always responds with success
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "email is required" }, { status: 400 })
   }
 
-  await supabase.auth.resetPasswordForEmail(email)
+  await requestPasswordReset(email)
 
   return NextResponse.json({ success: true })
 }

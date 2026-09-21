@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
-import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { listAllUsers } from "@/lib/services/userService"
 
 export async function GET(req: Request) {
   const auth = await requireAdmin(req)
@@ -8,17 +8,10 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: auth.error }, { status: auth.status })
   }
 
-  const { data, error } = await supabaseAdmin.auth.admin.listUsers()
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const result = await listAllUsers()
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  const users = data.users.map((u) => ({
-    id: u.id,
-    email: u.email,
-    role: u.app_metadata?.role ?? "user",
-    createdAt: u.created_at,
-  }))
-
-  return NextResponse.json({ users })
+  return NextResponse.json({ users: result.data })
 }

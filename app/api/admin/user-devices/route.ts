@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
-import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { assignDeviceToUser } from "@/lib/services/deviceService"
 
 export async function POST(req: Request) {
   const auth = await requireAdmin(req)
@@ -16,15 +16,10 @@ export async function POST(req: Request) {
     )
   }
 
-  const { data, error } = await supabaseAdmin
-    .from("user_devices")
-    .upsert({ user_id: userId, device_id: deviceId }, { onConflict: 'user_id,device_id' })
-    .select()
-    .single()
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const result = await assignDeviceToUser({ userId, deviceId })
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  return NextResponse.json({ userDevice: data }, { status: 201 })
+  return NextResponse.json({ userDevice: result.data }, { status: 201 })
 }

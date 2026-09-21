@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
-import { getDeviceConfig, setDeviceConfig } from "@/lib/deviceConfigCache"
-import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { getConfig, updateConfig } from "@/lib/services/deviceConfigService"
 
 export async function GET(req: Request, { params }: { params: Promise<{ deviceId: string }> }) {
   const { deviceId } = await params
@@ -14,8 +13,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     return NextResponse.json({ error: auth.error }, { status: auth.status })
   }
 
-  const config = await getDeviceConfig(deviceId)
-  return NextResponse.json({ sleep_interval: config?.sleepInterval ?? null })
+  const { sleepInterval } = await getConfig(deviceId)
+  return NextResponse.json({ sleep_interval: sleepInterval })
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ deviceId: string }> }) {
@@ -37,44 +36,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ device
     )
   }
 
-  const { data: device, error: deviceError } = await supabaseAdmin
-    .from("devices")
-    .select("id")
-    .eq("device_id", deviceId)
-    .single()
-
-  if (deviceError || !device) {
-    return NextResponse.json({ error: "Device not found" }, { status: 404 })
+  const result = await updateConfig({ deviceId, sleepInterval: sleep_interval })
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  const { data: existing, error: existingError } = await supabaseAdmin
-    .from("device_configuration")
-    .select("id")
-    .eq("device_id", device.id)
-    .maybeSingle()
-
-  if (existingError) {
-    return NextResponse.json({ error: existingError.message }, { status: 500 })
-  }
-
-  const writeError = existing
-    ? (await supabaseAdmin
-        .from("device_configuration")
-        .update({ sleep_interval })
-        .eq("id", existing.id)
-      ).error
-    : (await supabaseAdmin
-        .from("device_configuration")
-        .insert({ device_id: device.id, sleep_interval })
-      ).error
-
-  if (writeError) {
-    return NextResponse.json({ error: writeError.message }, { status: 500 })
-  }
-
-  // Update the in-memory cache right away, so the tracker's next request
-  // already gets the new value without waiting for a reload.
-  setDeviceConfig(deviceId, { sleepInterval: sleep_interval })
-
-  return NextResponse.json({ sleep_interval })
+  return NextResponse.json({ sleep_interval: result.data.sleepInterval })
 }

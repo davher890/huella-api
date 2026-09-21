@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
-import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { listDevicesForUserId } from "@/lib/services/deviceService"
 
 export async function GET(req: Request, { params }: { params: Promise<{ userId: string }> }) {
   const auth = await requireAdmin(req)
@@ -13,16 +13,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ userId: 
     return NextResponse.json({ error: "User ID required" }, { status: 400 })
   }
 
-  const { data: devices, error } = await supabaseAdmin
-    .from("devices")
-    .select("id, device_id, name, user_devices!inner ( id )")
-    .eq("user_devices.user_id", userId)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const result = await listDevicesForUserId(userId)
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  return NextResponse.json({
-    devices: (devices ?? []).map((d) => ({ id: d.id, device_id: d.device_id, name: d.name })),
-  })
+  return NextResponse.json({ devices: result.data })
 }

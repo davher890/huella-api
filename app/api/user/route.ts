@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { requireUser } from "@/lib/auth"
-import { supabase } from "@/lib/supabaseClient"
-import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { signUp } from "@/lib/services/authService"
+import { updateProfile } from "@/lib/services/userService"
 
 export async function POST(req: Request) {
   const { email, password } = await req.json()
@@ -13,13 +13,12 @@ export async function POST(req: Request) {
     )
   }
 
-  const { data, error } = await supabase.auth.signUp({ email, password })
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+  const result = await signUp(email, password)
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  return NextResponse.json({ user: data.user }, { status: 201 })
+  return NextResponse.json(result.data, { status: 201 })
 }
 
 // Updates the logged-in user's own profile. Email is intentionally not
@@ -33,32 +32,10 @@ export async function PATCH(req: Request) {
 
   const { name, password } = (await req.json()) as { name?: string; password?: string }
 
-  if (name === undefined && password === undefined) {
-    return NextResponse.json(
-      { error: "Provide at least one of: name, password" },
-      { status: 400 }
-    )
-  }
-  if (password !== undefined && password.length < 6) {
-    return NextResponse.json(
-      { error: "password must be at least 6 characters long" },
-      { status: 400 }
-    )
+  const result = await updateProfile(auth.user, { name, password })
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
-  const updates: { password?: string; user_metadata?: Record<string, unknown> } = {}
-  if (password !== undefined) {
-    updates.password = password
-  }
-  if (name !== undefined) {
-    updates.user_metadata = { ...auth.user.user_metadata, name }
-  }
-
-  const { data, error } = await supabaseAdmin.auth.admin.updateUserById(auth.user.id, updates)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json({ user: data.user })
+  return NextResponse.json(result.data)
 }
