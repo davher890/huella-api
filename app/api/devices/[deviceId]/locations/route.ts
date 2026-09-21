@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { requireDeviceOwner } from "@/lib/auth"
 import { supabase } from "@/lib/supabaseClient"
 import { supabaseAdmin } from "@/lib/supabaseAdminClient"
+import { calculateTotalDistance } from "@/app/utils/utils"
 
 type ClusterUpdate = { id: number; cluster: number | null }
 
@@ -79,7 +80,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     if (!data || data.length < PAGE_SIZE) break
   }
 
-  return NextResponse.json({ locations })
+  const distance = calculateTotalDistance(locations as { latitude: number; longitude: number }[])
+  return NextResponse.json({ locations: locations, distance: distance })
 }
 
 // Updates the cluster of several of a device's locations in a single call
