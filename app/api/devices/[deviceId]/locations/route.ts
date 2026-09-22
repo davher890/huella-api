@@ -9,6 +9,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ deviceId
     return NextResponse.json({ error: "Device ID required" }, { status: 400 })
   }
 
+  const owned = await requireDeviceOwner(req, deviceId)
+  if ("error" in owned) {
+    return NextResponse.json({ error: owned.error }, { status: owned.status })
+  }
+
   const { searchParams } = new URL(req.url)
   const from = searchParams.get("from")
   const to = searchParams.get("to")
