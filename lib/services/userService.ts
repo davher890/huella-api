@@ -32,6 +32,14 @@ export async function updateProfile(
   return { data: { user: data.user } }
 }
 
+export async function deleteUser(userId: string): Promise<ServiceResult<{ id: string }>> {
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
+  if (error) {
+    return { error: error.message, status: 500 }
+  }
+  return { data: { id: userId } }
+}
+
 export async function listAllUsers(): Promise<ServiceResult<AdminUserSummary[]>> {
   const { data, error } = await supabaseAdmin.auth.admin.listUsers()
   if (error) {

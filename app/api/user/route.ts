@@ -4,7 +4,11 @@ import { signUp } from "@/lib/services/authService"
 import { updateProfile } from "@/lib/services/userService"
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json()
+  const { email, password, name } = (await req.json()) as {
+    email?: string
+    password?: string
+    name?: string
+  }
 
   if (!email || !password) {
     return NextResponse.json(
@@ -13,7 +17,7 @@ export async function POST(req: Request) {
     )
   }
 
-  const result = await signUp(email, password)
+  const result = await signUp(email, password, name)
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: result.status })
   }
