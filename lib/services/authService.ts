@@ -1,5 +1,6 @@
 import type { Session, User } from "@supabase/supabase-js"
 import { supabase } from "@/lib/supabaseClient"
+import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 import type { ServiceResult } from "./types"
 
 export async function login(
@@ -16,13 +17,26 @@ export async function login(
 
 export async function signUp(
   email: string,
-  password: string
+  password: string,
+  name?: string
 ): Promise<ServiceResult<{ user: User | null }>> {
   const { data, error } = await supabase.auth.signUp({ email, password })
 
   if (error) {
     return { error: error.message, status: 400 }
   }
+
+  if (name && data.user) {
+    const { data: updated, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+      data.user.id,
+      { user_metadata: { ...data.user.user_metadata, name } }
+    )
+    if (updateError) {
+      return { error: updateError.message, status: 500 }
+    }
+    return { data: { user: updated.user } }
+  }
+
   return { data: { user: data.user } }
 }
 
