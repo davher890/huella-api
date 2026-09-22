@@ -40,6 +40,14 @@ export async function deleteUser(userId: string): Promise<ServiceResult<{ id: st
   return { data: { id: userId } }
 }
 
+export async function deleteUserDevices(userId: string): Promise<ServiceResult<{ id: string }>> {
+  const { error } = await supabaseAdmin.from("user_devices").delete().eq("user_id", userId)
+  if (error) {
+    return { error: error.message, status: 500 }
+  }
+  return { data: { id: userId } }
+}
+
 export async function listAllUsers(): Promise<ServiceResult<AdminUserSummary[]>> {
   const { data, error } = await supabaseAdmin.auth.admin.listUsers()
   if (error) {

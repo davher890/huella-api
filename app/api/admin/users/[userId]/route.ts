@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
-import { deleteUser } from "@/lib/services/userService"
+import { deleteUser, deleteUserDevices } from "@/lib/services/userService"
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ userId: string }> }) {
   const auth = await requireAdmin(req)
@@ -11,6 +11,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ userI
   const { userId } = await params
   if (!userId) {
     return NextResponse.json({ error: "User ID required" }, { status: 400 })
+  }
+
+  const devicesResult = await deleteUserDevices(userId)
+  if ("error" in devicesResult) {
+    return NextResponse.json({ error: devicesResult.error }, { status: devicesResult.status })
   }
 
   const result = await deleteUser(userId)
