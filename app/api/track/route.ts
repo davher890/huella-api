@@ -48,7 +48,7 @@ export async function GET(req: Request) {
   }
 
   return NextResponse.json(
-    { success: true, sleep_interval: result.data.sleepInterval },
+    { success: true },
     { status: 201 }
   )
 }

@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   }
 
   return NextResponse.json(
-    { success: true, count: result.data.count, sleep_interval: result.data.sleepInterval },
+    { success: true, count: result.data.count },
     { status: 201 }
   )
 }

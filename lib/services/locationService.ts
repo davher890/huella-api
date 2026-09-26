@@ -1,5 +1,4 @@
 import { calculateTotalDistance } from "@/app/utils/utils"
-import { getDeviceConfig } from "@/lib/deviceConfigCache"
 import { supabase } from "@/lib/supabaseClient"
 import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 import type {
@@ -86,7 +85,7 @@ export async function updateLocationClusters(params: {
 // Single-location ingestion (used by the GET-based firmware wire format).
 export async function recordLocation(
   input: RecordLocationInput
-): Promise<ServiceResult<{ sleepInterval: number | null }>> {
+): Promise<ServiceResult<{ status: string | null }>> {
   const { error } = await supabase.from("device_locations").insert({
     device_id: input.deviceId,
     latitude: input.latitude,
@@ -105,15 +104,14 @@ export async function recordLocation(
     return { error: error.message, status: 500 }
   }
 
-  const config = await getDeviceConfig(input.deviceId)
-  return { data: { sleepInterval: config?.sleepInterval ?? null } }
+  return { data: { status: "OK" } }
 }
 
 // Batch ingestion (used by the Android app and the LilyGO TinyGSM firmware,
 // which flush their whole offline queue in one call).
 export async function recordLocationsBatch(
   locations: BatchLocationInput[]
-): Promise<ServiceResult<{ count: number; sleepInterval: number | null }>> {
+): Promise<ServiceResult<{ count: number }>> {
   const rows = locations.map((loc) => ({
     device_id: loc.device_id,
     latitude: loc.latitude,
@@ -129,19 +127,14 @@ export async function recordLocationsBatch(
     return { error: error.message, status: 500 }
   }
 
-  // In practice the whole batch belongs to the same device (the offline
-  // queue is per device); we return the last record's config as current.
-  const lastDeviceId = rows[rows.length - 1].device_id
-  const config = await getDeviceConfig(lastDeviceId)
-
-  return { data: { count: rows.length, sleepInterval: config?.sleepInterval ?? null } }
+  return { data: { count: rows.length } }
 }
 
 export async function getDeviceStatistics(params: {
   deviceId: string
   from: string | null
   to: string | null
-}): Promise<ServiceResult<{ locations: LocationRow[]; distance: number }>> {
+}): Promise<ServiceResult<{ distance: number }>> {
   const result = await getLocations(params)
   if ("error" in result) return result
 
@@ -149,5 +142,5 @@ export async function getDeviceStatistics(params: {
     result.data as unknown as { latitude: number; longitude: number }[]
   )
 
-  return { data: { locations: result.data, distance } }
+  return { data: { distance } }
 }
