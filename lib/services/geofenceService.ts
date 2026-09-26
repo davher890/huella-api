@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabaseAdminClient"
-import type { Geofence, Point } from "@/lib/models/geofence"
+import type { Geofence, GeofenceGeometryType, Point } from "@/lib/models/geofence"
 import type { ServiceResult } from "./types"
 
 // PostGIS returns `geometry` columns cast to text as hex-encoded EWKB
@@ -56,7 +56,7 @@ function parseEwkbPolygonPoints(hex: string): Point[] {
 export async function getGeofence(deviceDbId: number): Promise<ServiceResult<Geofence | null>> {
   const { data: geofence, error } = await supabaseAdmin
     .from("device_geofences")
-    .select("id, device_id, name, created_at, area::text")
+    .select("id, device_id, name, created_at, geometry_type, area::text")
     .eq("device_id", deviceDbId)
     .maybeSingle()
 
@@ -73,6 +73,8 @@ export async function getGeofence(deviceDbId: number): Promise<ServiceResult<Geo
       deviceId: geofence.device_id,
       name: geofence.name,
       points: parseEwkbPolygonPoints(geofence.area as unknown as string),
+      // Rows saved before the geometry_type column existed default to polygon.
+      geometryType: (geofence.geometry_type as GeofenceGeometryType | null) ?? "polygon",
     },
   }
 }
@@ -80,6 +82,7 @@ export async function getGeofence(deviceDbId: number): Promise<ServiceResult<Geo
 export async function saveGeofence(params: {
   deviceDbId: number
   points: Point[]
+  geometryType: GeofenceGeometryType
 }): Promise<ServiceResult<{ id: number; device_id: number; name: string | null; created_at: string }>> {
   const ring = params.points.map((p) => `${p.lng} ${p.lat}`)
   if (ring[0] !== ring[ring.length - 1]) {
@@ -92,7 +95,7 @@ export async function saveGeofence(params: {
 
   const { data: geofence, error } = await supabaseAdmin
     .from("device_geofences")
-    .insert({ device_id: params.deviceDbId, area: wkt })
+    .insert({ device_id: params.deviceDbId, area: wkt, geometry_type: params.geometryType })
     .select("id, device_id, name, created_at")
     .single()
 

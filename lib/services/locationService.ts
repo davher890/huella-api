@@ -1,4 +1,4 @@
-import { calculateTotalDistance } from "@/app/utils/utils"
+import { calculateTotalDistance } from "@/utils/utils"
 import { supabase } from "@/lib/supabaseClient"
 import { supabaseAdmin } from "@/lib/supabaseAdminClient"
 import type {
