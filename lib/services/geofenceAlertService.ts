@@ -38,6 +38,7 @@ export async function notifyIfLeftGeofence(params: {
   }
 
   const justLeft = wasInside === true && params.isWithinGeofence === false
+  console.log(`Device ${device.id} just left geofence: ${justLeft}`)
   if (!justLeft) {
     return { data: { notified: false } }
   }
@@ -52,6 +53,7 @@ export async function notifyIfLeftGeofence(params: {
   }
 
   const userIds = (owners ?? []).map((o) => o.user_id as string)
+  console.log(`Device ${device.id} has owners: ${userIds.join(", ")}`)
   if (userIds.length === 0) {
     return { data: { notified: false } }
   }
@@ -61,6 +63,7 @@ export async function notifyIfLeftGeofence(params: {
     .select("fcm_token")
     .in("user_id", userIds)
   if (tokensError) {
+    console.error("Error fetching push tokens:", tokensError.message)
     return { error: tokensError.message, status: 500 }
   }
 
