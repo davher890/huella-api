@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { recordLocation } from "@/lib/services/locationService"
+import { checkLocationWithinGeofence, recordLocation } from "@/lib/services/locationService"
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -42,13 +42,30 @@ export async function GET(req: Request) {
     altitude,
     accuracy,
   })
-
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: result.status })
   }
 
+  // Best-effort: the location is already recorded at this point, so a
+  // failure here must not turn this response into an error. Callers (the
+  // tracker app, the firmware) treat any non-2xx as "not sent" and requeue
+  // the point for a batch retry, which would re-insert it and duplicate it.
+  const geofenceResult = await checkLocationWithinGeofence({
+    deviceId: device_id,
+    lon: longitude,
+    lat: latitude,
+  })
+  if ("error" in geofenceResult) {
+    console.error("Error checking geofence:", geofenceResult.error)
+  }
+
   return NextResponse.json(
-    { success: true },
+    {
+      success: true,
+      data: {
+        isWithinGeofence: "error" in geofenceResult ? null : geofenceResult.data.isWithinGeofence,
+      },
+    },
     { status: 201 }
   )
 }

@@ -107,6 +107,28 @@ export async function recordLocation(
   return { data: { status: "OK" } }
 }
 
+// PostgREST's query builder can't express a join + ST_Intersects, so the
+// check runs server-side in a single statement via RPC (see db/ddl.sql).
+// Named params on purpose: lat/lon in the same order as the call site is a
+// classic mix-up, and this function had exactly that bug before.
+export async function checkLocationWithinGeofence(params: {
+  deviceId: string
+  lon: number
+  lat: number
+}): Promise<ServiceResult<{ isWithinGeofence: boolean }>> {
+  const { data, error } = await supabaseAdmin.rpc("is_location_within_geofence", {
+    p_device_id: params.deviceId,
+    p_lon: params.lon,
+    p_lat: params.lat,
+  })
+
+  if (error) {
+    return { error: error.message, status: 500 }
+  }
+
+  return { data: { isWithinGeofence: data === true } }
+}
+
 // Batch ingestion (used by the Android app and the LilyGO TinyGSM firmware,
 // which flush their whole offline queue in one call).
 export async function recordLocationsBatch(
