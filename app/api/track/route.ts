@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { notifyIfLeftGeofence } from "@/lib/services/geofenceAlertService"
 import { checkLocationWithinGeofence, recordLocation } from "@/lib/services/locationService"
 
 export async function GET(req: Request) {
@@ -57,6 +58,16 @@ export async function GET(req: Request) {
   })
   if ("error" in geofenceResult) {
     console.error("Error checking geofence:", geofenceResult.error)
+  } else {
+    // Also best-effort: a failed push must not turn an already-recorded,
+    // already-checked location into an error response.
+    const alertResult = await notifyIfLeftGeofence({
+      deviceId: device_id,
+      isWithinGeofence: geofenceResult.data.isWithinGeofence,
+    })
+    if ("error" in alertResult) {
+      console.error("Error sending geofence alert:", alertResult.error)
+    }
   }
 
   return NextResponse.json(

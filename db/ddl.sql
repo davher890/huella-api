@@ -37,3 +37,4 @@ as $$
   );
 $$;
 
+CREATE INDEX push_tokens_user_id_idx ON public.push_tokens(user_id);
