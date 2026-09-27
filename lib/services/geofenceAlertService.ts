@@ -24,6 +24,7 @@ export async function notifyIfLeftGeofence(params: {
   }
 
   const wasInside = device.last_geofence_status as boolean | null
+  console.log(`Device ${device.id} last_geofence_status: ${wasInside}, current isWithinGeofence: ${params.isWithinGeofence}`)
 
   // Persisted regardless of whether this call ends up notifying, so the
   // next check always has an accurate "before" state to compare against.
@@ -32,6 +33,7 @@ export async function notifyIfLeftGeofence(params: {
     .update({ last_geofence_status: params.isWithinGeofence })
     .eq("id", device.id)
   if (updateError) {
+    console.error("Error updating last_geofence_status:", updateError.message)
     return { error: updateError.message, status: 500 }
   }
 
@@ -45,6 +47,7 @@ export async function notifyIfLeftGeofence(params: {
     .select("user_id")
     .eq("device_id", device.id)
   if (ownersError) {
+    console.error("Error fetching device owners:", ownersError.message)
     return { error: ownersError.message, status: 500 }
   }
 
