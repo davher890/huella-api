@@ -7,15 +7,20 @@ const corsOptions = {
 }
 
 // The Flutter web build is served from this same deployment (under /app),
-// but Vercel also exposes every deployment at its own unique *.vercel.app
-// preview URL, which the browser treats as a different origin from
-// whichever one happens to be "production" at the time. Auth here is a
-// Bearer token (not cookies), so allowing any *.vercel.app origin is a
+// reachable both via the custom domain (huellagps.es) and via Vercel's own
+// *.vercel.app domains (the production alias, plus a unique preview URL per
+// deployment) — the browser treats each of these as a different origin.
+// Auth here is a Bearer token (not cookies), so allowing all of them is a
 // reasonable tradeoff rather than hardcoding one exact domain.
 function isAllowedOrigin(origin: string): boolean {
   if (!origin) return false
   try {
-    return new URL(origin).hostname.endsWith(".vercel.app")
+    const hostname = new URL(origin).hostname
+    return (
+      hostname.endsWith(".vercel.app") ||
+      hostname === "huellagps.es" ||
+      hostname.endsWith(".huellagps.es")
+    )
   } catch {
     return false
   }
