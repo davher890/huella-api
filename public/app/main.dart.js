@@ -108204,7 +108204,7 @@ q.m(0,"Content-Type","application/json")
 return A.OH(s,B.a9.oo(A.ay(["device_id",this.b,"name",this.c],r,r),null),q)},
 $S:28}
 A.Sc.prototype={
-F(a){return new A.EP($.aTm(),B.a4c,"Tracking things",A.b3Q(),B.Dt,null)}}
+F(a){return new A.EP($.aTm(),B.a4c,"Huella GPS",A.b3Q(),B.Dt,null)}}
 A.a5d.prototype={
 F(a){return A.mW(new A.aJZ(),B.io.a6s(0,"session_access_token"),t.ob)}}
 A.aJZ.prototype={
