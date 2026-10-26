@@ -108394,7 +108394,7 @@ if(m!=null)B.b.U(k,A.b([B.hN,A.aQ(m,f,f,f,f,A.dQ(f,f,A.M(a).ax.fy,f,f,f,f,f,f,f,
 k.push(B.ff)
 m=g.at
 j=m?f:g.gagn()
-k.push(A.rW(m?B.dh:B.a0k,j))
+k.push(A.rW(m?B.dh:B.a0l,j))
 k=A.t7(f,A.cO(k,B.aU,B.z,B.W,0,B.N),g.r)
 j=A.aQ("Recuperar contrase\xf1a",f,f,f,f,A.M(a).ok.w,f,f,f)
 i=A.aQ("Si prefieres restablecerla por email en vez de escribir una nueva aqui.",f,f,f,f,A.M(a).ok.Q,f,f,f)
@@ -108462,7 +108462,7 @@ s=2
 return A.q(A.ks(A.b([p,o],t.ym),t.UX),$async$AS)
 case 2:return A.E(null,r)}})
 return A.F($async$AS,r)},
-F(a){var s,r,q,p=this,o=null,n=A.mo(o,B.Wm,B.a0l),m=p.e
+F(a){var s,r,q,p=this,o=null,n=A.mo(o,B.Wm,B.a0m),m=p.e
 m===$&&A.a()
 s=p.gafm()
 r=p.d
@@ -108499,7 +108499,7 @@ return A.F($async$rJ,r)},
 F(a){return A.FU(A.mW(new A.aM9(this),this.c,t.Ld),this.d)}}
 A.aM3.prototype={
 $1(a){var s=null,r=A.aQ("\xbfSeguro que quieres eliminar a "+this.a.b+"? Esta accion no se puede deshacer.",s,s,s,s,s,s,s,s)
-return A.aTA(A.b([A.nJ(B.Ds,s,s,new A.aM1(a),s,s),A.rW(B.a0F,new A.aM2(a))],t.p),r,B.a0m)},
+return A.aTA(A.b([A.nJ(B.Ds,s,s,new A.aM1(a),s,s),A.rW(B.a0F,new A.aM2(a))],t.p),r,B.a0n)},
 $S:220}
 A.aM1.prototype={
 $0(){return A.cK(this.a,!1).hk(!1)},
@@ -108727,7 +108727,7 @@ if(n!=null)B.b.U(o,A.b([B.bU,A.aQ(n,r,r,r,r,A.dQ(r,r,A.M(a).ax.fy,r,r,r,r,r,r,r,
 o.push(B.fg)
 p=s.w
 n=p?r:s.gahJ()
-o.push(A.rW(p?B.dh:B.a0d,n))
+o.push(A.rW(p?B.dh:B.a0e,n))
 return A.lS(q,A.ed(new A.dL(B.id,new A.aM(B.aV,A.t7(r,A.cO(o,B.aU,B.z,B.ad,0,B.N),s.d),r),r),r,r),r)}}
 A.azr.prototype={
 $0(){var s=this.a
@@ -109183,7 +109183,7 @@ F(a){var s,r=this,q=null,p=A.b([A.fq(q,q,B.KC,q,q,new A.aBl(a),q,q,"Ver todos en
 if(r.f)p.push(A.fq(q,q,B.KJ,q,q,new A.aBm(a),q,q,"Administracion"))
 p.push(A.fq(q,q,B.rj,q,q,new A.aBn(a),q,q,"Mi cuenta"))
 p.push(A.fq(q,q,B.Kz,q,q,new A.aBo(r,a),q,q,"Cerrar sesion"))
-p=A.mo(p,q,B.a0c)
+p=A.mo(p,q,B.a0d)
 s=r.e
 s===$&&A.a()
 return A.lS(p,A.FU(A.mW(new A.aBp(),s,t.xM),r.gatP()),q)}}
@@ -109541,12 +109541,12 @@ s.f=s.Jq()},
 $S:0}
 A.aBC.prototype={
 $1(a){var s,r,q,p,o,n=null,m=this.a,l=A.hn(B.rf,m.x?A.M(a).ax.b:n,n,n),k=m.x
-l=A.tt(!1,n,n,n,!0,n,n,!0,n,l,n,n,n,n,new A.aBz(a),k,n,n,n,n,B.a0z,n,B.a0j,n,n,n)
+l=A.tt(!1,n,n,n,!0,n,n,!0,n,l,n,n,n,n,new A.aBz(a),k,n,n,n,n,B.a0z,n,B.a0k,n,n,n)
 m=k?n:m.w.a
 k=t.p
 s=A.b([],k)
 for(r=[B.DM,B.oq,B.DN,B.DO],q=t.Ui,p=0;p<4;++p){o=r[p]
-s.push(new A.y5(o,A.aQ(new A.z4(o,n,n).guC(0),n,n,n,n,n,n,n,n),n,q))}s.push(A.tt(!1,n,n,n,!0,n,n,!0,n,B.Ks,n,n,n,n,new A.aBA(a),!1,n,n,n,n,n,n,B.a0e,n,n,n))
+s.push(new A.y5(o,A.aQ(new A.z4(o,n,n).guC(0),n,n,n,n,n,n,n,n),n,q))}s.push(A.tt(!1,n,n,n,!0,n,n,!0,n,B.Ks,n,n,n,n,new A.aBA(a),!1,n,n,n,n,n,n,B.a0f,n,n,n))
 return A.ur(!0,A.cO(A.b([l,B.ex,new A.y4(m,new A.aBB(a),A.cO(s,B.M,B.z,B.ad,0,B.N),n,t.uA)],k),B.M,B.z,B.ad,0,B.N),B.a2,!0)},
 $S:695}
 A.aBz.prototype={
@@ -109705,7 +109705,7 @@ if(this.d)return B.KN
 if(this.e)return B.KM
 return A.fn(s,s,B.y,s,s,new A.dj(this.f,s,A.aPf(B.bM,B.v,1.5),s,s,s,B.d4),s,s,s,s,s,s,s)}}
 A.a1i.prototype={
-F(a){var s=null,r=A.M(a).ax.k2.jB(0.9),q=A.hL(8),p=t.p,o=A.b([B.Kt,B.fe,B.a0i,B.kl,B.KD,B.fe,B.a0n],p)
+F(a){var s=null,r=A.M(a).ax.k2.jB(0.9),q=A.hL(8),p=t.p,o=A.b([B.Kt,B.fe,B.a0j,B.kl,B.KD,B.fe,B.a0o],p)
 if(this.c)B.b.U(o,A.b([B.kl,B.KE,B.fe,B.a0G],p))
 return A.fn(s,A.dx(o,B.M,B.z,B.ad,0,s),B.y,s,s,new A.dj(r,s,s,q,B.jq,s,B.aS),s,s,s,B.qs,s,s,s)}}
 A.a_D.prototype={
@@ -109716,7 +109716,7 @@ return A.fn(s,A.mW(new A.aCm(this),this.c,t.i),B.y,s,s,new A.dj(r,s,s,q,B.jq,s,B
 A.aCm.prototype={
 $2(a,b){var s,r=null
 if(b.a===B.cj)return B.VF
-if(b.c!=null)return B.a0h
+if(b.c!=null)return B.a0i
 s=b.b
 s.toString
 return A.dx(A.b([B.Ku,B.fe,A.aQ("Distancia recorrida: "+this.a.ajG(s),r,r,r,r,B.dk,r,r,r)],t.p),B.M,B.z,B.ad,0,r)},
@@ -109845,7 +109845,7 @@ return A.q(A.cK(p,!1).hm(A.kB(new A.aEY(),null,t.y)),$async$Cb)
 case 2:if(b===!0&&q.c!=null)q.c.ac(t.l).f.iW(B.VP)
 return A.E(null,r)}})
 return A.F($async$Cb,r)},
-F(a){var s=this,r=null,q=A.mo(r,r,B.a0q),p=t.p,o=A.b([A.aQ("Iniciar sesion",r,r,r,r,A.M(a).ok.f,r,r,r),B.fg,A.j8(!1,s.e,B.rq,!1,r,r,B.ko,1,!1,r,r,r,r,r,r,B.a7,r,new A.aF2()),B.bU,A.j8(!1,s.f,B.Li,!1,r,r,r,1,!0,r,r,r,r,r,r,B.a7,r,new A.aF3())],p),n=s.y
+F(a){var s=this,r=null,q=A.mo(r,r,B.a0b),p=t.p,o=A.b([A.aQ("Iniciar sesion",r,r,r,r,A.M(a).ok.f,r,r,r),B.fg,A.j8(!1,s.e,B.rq,!1,r,r,B.ko,1,!1,r,r,r,r,r,r,B.a7,r,new A.aF2()),B.bU,A.j8(!1,s.f,B.Li,!1,r,r,r,1,!0,r,r,r,r,r,r,B.a7,r,new A.aF3())],p),n=s.y
 if(n!=null)B.b.U(o,A.b([B.bU,A.aQ(n,r,r,r,r,A.dQ(r,r,A.M(a).ax.fy,r,r,r,r,r,r,r,r,r,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),r,r,r)],p))
 o.push(B.fg)
 p=s.x
@@ -109871,7 +109871,7 @@ $0(){return this.a.x=!1},
 $S:0}
 A.aEX.prototype={
 $1(a){var s=null,r=this.a,q=this.b,p=A.t7(s,A.j8(!0,q,B.Lg,!1,s,s,B.ko,1,!1,s,s,s,s,s,s,B.a7,s,new A.aEU()),r)
-return A.aTA(A.b([A.nJ(B.Ds,s,s,new A.aEV(a),s,s),A.rW(B.a0b,new A.aEW(r,a,q))],t.p),p,B.a0H)},
+return A.aTA(A.b([A.nJ(B.Ds,s,s,new A.aEV(a),s,s),A.rW(B.a0c,new A.aEW(r,a,q))],t.p),p,B.a0H)},
 $S:220}
 A.aEU.prototype={
 $1(a){return a==null||B.d.eB(a).length===0?"Introduce tu email":null},
@@ -116509,14 +116509,14 @@ B.VN=new A.lW(5,"timeout")
 B.VO=new A.yG(null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.a0r=new A.c0("Cuenta creada. Ya puedes iniciar sesion.",null,null,null,null,null,null,null,null,null,null)
 B.VP=new A.kQ(B.a0r,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
-B.a0f=new A.c0("Si el email existe, te hemos enviado un enlace para restablecer la contrase\xf1a.",null,null,null,null,null,null,null,null,null,null)
-B.VQ=new A.kQ(B.a0f,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
-B.a0o=new A.c0("Nombre actualizado",null,null,null,null,null,null,null,null,null,null)
-B.VR=new A.kQ(B.a0o,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
-B.a0g=new A.c0("La fecha de inicio debe ser anterior a la de fin",null,null,null,null,null,null,null,null,null,null)
-B.VS=new A.kQ(B.a0g,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
-B.a0p=new A.c0("Contrase\xf1a actualizada",null,null,null,null,null,null,null,null,null,null)
-B.VT=new A.kQ(B.a0p,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
+B.a0g=new A.c0("Si el email existe, te hemos enviado un enlace para restablecer la contrase\xf1a.",null,null,null,null,null,null,null,null,null,null)
+B.VQ=new A.kQ(B.a0g,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
+B.a0p=new A.c0("Nombre actualizado",null,null,null,null,null,null,null,null,null,null)
+B.VR=new A.kQ(B.a0p,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
+B.a0h=new A.c0("La fecha de inicio debe ser anterior a la de fin",null,null,null,null,null,null,null,null,null,null)
+B.VS=new A.kQ(B.a0h,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
+B.a0q=new A.c0("Contrase\xf1a actualizada",null,null,null,null,null,null,null,null,null,null)
+B.VT=new A.kQ(B.a0q,null,null,null,null,null,null,null,null,null,null,null,null,B.c4,!1,null,null,null,B.B,null)
 B.CZ=new A.Hh(0,"permissive")
 B.VU=new A.Hh(1,"normal")
 B.VV=new A.Hh(2,"forced")
@@ -116899,21 +116899,21 @@ B.a_2=new A.x(!0,B.l,null,".AppleSystemUIFont",null,null,null,null,null,null,nul
 B.X9=new A.x(!0,B.l,null,".AppleSystemUIFont",null,null,null,null,null,null,null,null,null,null,null,null,null,B.h,null,null,null,"blackRedwoodCity labelSmall",null,null,null,null)
 B.a08=new A.eB(B.YX,B.XS,B.YY,B.Zo,B.Xz,B.XH,B.Ya,B.Zj,B.Yn,B.ZK,B.X2,B.Xl,B.ZH,B.a_2,B.X9)
 B.a09=new A.c0("Olvide mi contrase\xf1a",null,null,null,null,null,null,null,null,null,null)
-B.a0b=new A.c0("Enviar",null,null,null,null,null,null,null,null,null,null)
-B.a0c=new A.c0("Mis devices",null,null,null,null,null,null,null,null,null,null)
+B.a0b=new A.c0("Huella GPS",null,null,null,null,null,null,null,null,null,null)
+B.a0c=new A.c0("Enviar",null,null,null,null,null,null,null,null,null,null)
+B.a0d=new A.c0("Mis devices",null,null,null,null,null,null,null,null,null,null)
 B.Dq=new A.c0("Crear cuenta",null,null,null,null,null,null,null,null,null,null)
-B.a0d=new A.c0("Crear",null,null,null,null,null,null,null,null,null,null)
-B.a0e=new A.c0("Personalizado...",null,null,null,null,null,null,null,null,null,null)
+B.a0e=new A.c0("Crear",null,null,null,null,null,null,null,null,null,null)
+B.a0f=new A.c0("Personalizado...",null,null,null,null,null,null,null,null,null,null)
 B.Dr=new A.c0("Nuevo device",null,null,null,null,null,null,null,null,null,null)
-B.a0h=new A.c0("Distancia: --",null,B.dk,null,null,null,null,null,null,null,null)
-B.a0i=new A.c0("Inicio",null,B.dk,null,null,null,null,null,null,null,null)
-B.a0j=new A.c0("Tiempo real",null,null,null,null,null,null,null,null,null,null)
-B.a0k=new A.c0("Cambiar contrase\xf1a",null,null,null,null,null,null,null,null,null,null)
-B.a0l=new A.c0("Administracion",null,null,null,null,null,null,null,null,null,null)
-B.a0m=new A.c0("Eliminar usuario",null,null,null,null,null,null,null,null,null,null)
-B.a0n=new A.c0("Ultima posicion",null,B.dk,null,null,null,null,null,null,null,null)
+B.a0i=new A.c0("Distancia: --",null,B.dk,null,null,null,null,null,null,null,null)
+B.a0j=new A.c0("Inicio",null,B.dk,null,null,null,null,null,null,null,null)
+B.a0k=new A.c0("Tiempo real",null,null,null,null,null,null,null,null,null,null)
+B.a0l=new A.c0("Cambiar contrase\xf1a",null,null,null,null,null,null,null,null,null,null)
+B.a0m=new A.c0("Administracion",null,null,null,null,null,null,null,null,null,null)
+B.a0n=new A.c0("Eliminar usuario",null,null,null,null,null,null,null,null,null,null)
+B.a0o=new A.c0("Ultima posicion",null,B.dk,null,null,null,null,null,null,null,null)
 B.Ds=new A.c0("Cancelar",null,null,null,null,null,null,null,null,null,null)
-B.a0q=new A.c0("Tracking things",null,null,null,null,null,null,null,null,null,null)
 B.a0t=new A.c0("Asignar",null,null,null,null,null,null,null,null,null,null)
 B.a0v=new A.c0("Sign up",null,null,null,null,null,null,null,null,null,null)
 B.a0x=new A.c0("Limpiar",null,null,null,null,null,null,null,null,null,null)
