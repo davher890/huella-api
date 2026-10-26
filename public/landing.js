@@ -38,7 +38,7 @@ setInterval(() => {
 // form-to-email relay: no backend needed. IMPORTANT: the first submission
 // to a new destination address triggers a one-time confirmation email
 // that must be clicked before further leads are delivered.
-const LEAD_ENDPOINT = 'https://formsubmit.co/ajax/davher890@gmail.com';
+const LEAD_ENDPOINT = 'https://formsubmit.co/ajax/huellagps@gmail.com';
 
 const form = document.getElementById('lead-form');
 const status = document.getElementById('form-status');
@@ -63,7 +63,7 @@ form.addEventListener('submit', async (e) => {
     form.reset();
     trackEvent('lead_form_submit', { sector: data.sector });
   } catch (err) {
-    status.textContent = 'No hemos podido enviarlo. Escríbenos directamente a davher890@gmail.com';
+    status.textContent = 'No hemos podido enviarlo. Escríbenos directamente a huellagps@gmail.com';
     status.className = 'err';
   }
 });

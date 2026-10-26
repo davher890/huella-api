@@ -391,7 +391,7 @@ export default function Home() {
             <li><a href="#">Aviso legal</a></li>
             <li><a href="#">Política de privacidad</a></li>
             <li><a href="#">Política de cookies</a></li>
-            <li><a href="mailto:davher890@gmail.com">davher890@gmail.com</a></li>
+            <li><a href="mailto:huellagps@gmail.com">huellagps@gmail.com</a></li>
           </ul>
           <span className="footer-copy">© 2026 Huella GPS</span>
         </div>
