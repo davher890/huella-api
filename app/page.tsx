@@ -309,8 +309,7 @@ export default function Home() {
                   <div className="price-row-label">Cuota mensual</div>
                   <span className="price-row-sub">Incluye app, alertas y soporte</span>
                 </div>
-                {/* TODO: fijar precio final de la cuota mensual antes de publicar */}
-                <div className="price-num">5€<span style={{ fontSize: "1rem", color: "var(--text-faint)" }}>/mes</span></div>
+                <div className="price-num">12€<span style={{ fontSize: "1rem", color: "var(--text-faint)" }}>/mes</span></div>
               </div>
               <ul className="price-includes">
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" /></svg>Localizador GPS 4G, batería incluida</li>
@@ -319,7 +318,7 @@ export default function Home() {
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" /></svg>Soporte durante todo el alquiler</li>
               </ul>
               <a href="#contacto" className="btn btn-primary" data-track="cta_pricing">Solicitar dispositivo</a>
-              <p className="price-note">Sin tarjeta de crédito para empezar. Te contactamos para confirmar disponibilidad.</p>
+              <p className="price-note">120€/año con el plan anual (2 meses gratis). A partir de 20 vehículos, 10€/mes (100€/año). Sin tarjeta de crédito para empezar.</p>
             </div>
           </div>
         </section>
